@@ -29,22 +29,32 @@ def get_gear_ratio(speed_reducer):
     return ratio
 
 def tau_dcmotor(omega, motor):
-    if type(omega) != np.ndarray or int or float:
-        raise TypeError("Input is not a vector or scalar, fuck you")
+    if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
+        raise TypeError("Input is not a 1D vector or scalar, fuck you")
 
     if type(motor) != dict:
         raise TypeError("Input is not a dict, fuck you")
 
-    if omega < motor["speed_noload"]:
-        tau = motor["torque_stall"] - (((motor["torque_stall"]- motor["torque_noload"]) / motor['speed_noload']) * omega)
-    elif omega >= motor["speed_noload"]:
-        tau = 0
-    elif omega < 0:
-        tau = motor["torque_stall"]
+    if np.isscalar(omega):
+        if (omega <= motor["speed_noload"]) and (omega >= 0):
+            tau = motor["torque_stall"] - (((motor["torque_stall"]- motor["torque_noload"]) / motor['speed_noload']) * omega)
+        elif (omega > motor["speed_noload"]):
+            tau = 0
+        elif (omega < 0):
+            tau = motor["torque_stall"]
+        else:
+            raise Exception("Something went wrong")
     else:
-        raise Exception("Something went wrong")
-    
-    return tau
+        tau = np.array([])
+        for i in range(len(omega)):
+            if (omega[i] <= motor["speed_noload"]) and (omega[i] >= 0):
+                tau = np.append(tau, motor["torque_stall"] - (((motor["torque_stall"]- motor["torque_noload"]) / motor['speed_noload']) * omega[i]))
+            elif (omega[i] > motor["speed_noload"]):
+                tau = np.append(tau, 0)
+            elif (omega[i] < 0):
+                tau = np.append(tau, motor["torque_stall"])
+            else:
+                raise Exception("Something went wrong")
 
 def F_Drive(omega, rover):
     if type(rover) != dict:
@@ -55,13 +65,6 @@ def F_Drive(omega, rover):
 
     
 def F_gravity(terrain_angle, rover, planet):
-    
-    if type(terrain_angle) != np.ndarray:
-        raise TypeError("Input is not a np.ndarray, fuck you")
-    
-    if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
-
     if type(planet) != dict:
         raise TypeError("Input is not a dict, fuck you")
     
