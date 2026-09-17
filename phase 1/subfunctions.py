@@ -16,6 +16,9 @@ def get_mass(rover):
         return m_total
 
 def get_gear_ratio(speed_reducer):
+    if type(speed_reducer["type"]) == str:
+        raise TypeError("Just.\n fuck you")
+
     if (speed_reducer["type"]).lower() == "reverted":
         raise TypeError("Type is not reverted, fuck you")
 
