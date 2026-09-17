@@ -53,10 +53,10 @@ def F_gravity(terrain_angle, rover, planet):
     if type(terrain_angle) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
     
-    if type(rover) != "dict":
+    if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
 
-    if type(planet) != "dict":
+    if type(planet) != dict:
         raise TypeError("Input is not a dict, fuck you")
     
     for i in terrain_angle:
