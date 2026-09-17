@@ -15,7 +15,7 @@ def get_mass(rover):
         m_total = m_wheels + m_spd_rdcr + m_motor+ m_chassis + m_payload + m_pwr_systm
         return m_total
 
-'''def get_gear_ratio(speed_reducer):
+def get_gear_ratio(speed_reducer):
     if type(speed_reducer) != "dict":
         raise TypeError("Input is not a dict, fuck you")
     else:
