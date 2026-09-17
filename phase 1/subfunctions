@@ -48,10 +48,5 @@ def F_Drive(omega, rover):
         raise TypeError("Input is not a np.ndarray, fuck you")
 
     
-
-
-    
-
-
-
-    
+def F_gravity():
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
