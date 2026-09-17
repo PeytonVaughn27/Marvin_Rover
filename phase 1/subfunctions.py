@@ -15,12 +15,12 @@ def get_mass(rover):
         m_total = m_wheels + m_spd_rdcr + m_motor+ m_chassis + m_payload + m_pwr_systm
         return m_total
 
-'''def get_gear_ratio(speed_reducer):
+def get_gear_ratio(speed_reducer):
     if type(speed_reducer) != "dict":
-            raise TypeError("Input is not a dict, fuck you")
-        else:
-            Ng =    
-'''
+        raise TypeError("Input is not a dict, fuck you")
+    else:
+        ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
+    return ratio
 
 def tau_dcmotor(omega, motor):
     if type(omega) != np.ndarray or int or float:
@@ -48,10 +48,5 @@ def F_Drive(omega, rover):
         raise TypeError("Input is not a np.ndarray, fuck you")
 
     
-
-
-    
-
-
-
-    
+def F_gravity():
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
