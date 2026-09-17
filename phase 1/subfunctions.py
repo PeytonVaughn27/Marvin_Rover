@@ -21,3 +21,32 @@ def get_gear_ratio(speed_reducer):
     else:
         ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
     return ratio
+
+def tau_dcmotor(omega, motor):
+    if type(omega) != np.ndarray or int or float:
+        raise TypeError("Input is not a vector or scalar, fuck you")
+
+    if type(motor) != "dict":
+        raise TypeError("Input is not a dict, fuck you")
+
+    if omega < motor["speed_noload"]:
+        tau = motor["torque_stall"] - (((motor["torque_stall"]- motor["torque_noload"]) / motor['speed_noload']) * omega)
+    elif omega >= motor["speed_noload"]:
+        tau = 0
+    elif omega < 0:
+        tau = motor["torque_stall"]
+    else:
+        raise Exception("Something went wrong")
+    
+    return tau
+
+def F_Drive(omega, rover):
+    if type(rover) != "dict":
+        raise TypeError("Input is not a dict, fuck you")
+
+    if type(omega) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
+
+    
+def F_gravity():
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
