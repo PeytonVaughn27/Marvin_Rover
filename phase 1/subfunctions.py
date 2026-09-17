@@ -48,5 +48,24 @@ def F_Drive(omega, rover):
         raise TypeError("Input is not a np.ndarray, fuck you")
 
     
-def F_gravity():
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+def F_gravity(terrain_angle, rover, planet):
+    
+    if type(terrain_angle) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
+    
+    if type(rover) != "dict":
+        raise TypeError("Input is not a dict, fuck you")
+
+    if type(planet) != "dict":
+        raise TypeError("Input is not a dict, fuck you")
+    
+    for i in terrain_angle:
+        if i < -75 * np.pi/180 or i > 75 * np.pi/180:
+            raise ValueError("Terrain angle is out of bounds, fuck you")
+        
+        angle = i
+        mass = get_mass(rover)
+
+        Force_g = mass * planet["gravity"] * np.sin(angle)  
+    
+    return Force_g                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
