@@ -15,6 +15,7 @@ def get_mass(rover):
 
 def get_gear_ratio(speed_reducer):
     if type(speed_reducer) != "dict":
-            raise TypeError("Input is not a dict, fuck you")
-        else:
-            Ng =
+        raise TypeError("Input is not a dict, fuck you")
+    else:
+        ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
+    return ratio
