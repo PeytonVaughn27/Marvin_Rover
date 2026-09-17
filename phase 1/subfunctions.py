@@ -23,7 +23,7 @@ def get_gear_ratio(speed_reducer):
     return ratio
 
 def tau_dcmotor(omega, motor):
-    if type(omega) != np.ndarray or int or float:
+    if np.isscalar(omega) or isinstance(omega, np.ndarray):
         raise TypeError("Input is not a vector or scalar, fuck you")
 
     if type(motor) != "dict":
@@ -46,6 +46,8 @@ def F_Drive(omega, rover):
 
     if type(omega) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
+
+    
 
     
 def F_gravity():
