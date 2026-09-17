@@ -1,0 +1,23 @@
+
+import numpy as np
+
+def get_mass(rover):
+    if type(rover) != "dict":
+        raise TypeError("Input is not a dict, fuck you")
+    else:
+        m_wheels = (rover["wheel_assembly"]["wheel"]["mass"]*6)
+        m_spd_rdcr = (rover["wheel_assembly"]["speed_reducer"]["mass"]*6)
+        m_motor = (rover["wheel_assembly"]["motor"]["mass"]*6)
+        m_chassis = (rover["chassis"]["mass"])
+        m_payload = (rover["science_payload"]["mass"])
+        m_pwr_systm = (rover["power_subsys"]["mass"])
+
+        m_total = m_wheels + m_spd_rdcr + m_motor+ m_chassis + m_payload + m_pwr_systm
+        return m_total
+
+def get_gear_ratio(speed_reducer):
+    if type(speed_reducer) != "dict":
+        raise TypeError("Input is not a dict, fuck you")
+    else:
+        ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
+    return ratio
