@@ -70,3 +70,5 @@ def F_gravity(terrain_angle, rover, planet):
         Force_g = np.append(Force_g, mass * planet["gravity"] * np.sin(np.radians(angle)))
     
     return Force_g                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+ftg = ([ 5, 0, 10, 70], )
