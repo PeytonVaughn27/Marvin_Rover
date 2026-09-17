@@ -2,7 +2,7 @@
 import numpy as np
 
 def get_mass(rover):
-    if type(rover) != "dict":
+    if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
     else:
         m_wheels = (rover["wheel_assembly"]["wheel"]["mass"]*6)
@@ -16,7 +16,7 @@ def get_mass(rover):
         return m_total
 
 def get_gear_ratio(speed_reducer):
-    if type(speed_reducer) != "dict":
+    if type(speed_reducer) != dict:
         raise TypeError("Input is not a dict, fuck you")
     else:
         ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
@@ -26,7 +26,7 @@ def tau_dcmotor(omega, motor):
     if type(omega) != np.ndarray or int or float:
         raise TypeError("Input is not a vector or scalar, fuck you")
 
-    if type(motor) != "dict":
+    if type(motor) != dict:
         raise TypeError("Input is not a dict, fuck you")
 
     if omega < motor["speed_noload"]:
@@ -41,7 +41,7 @@ def tau_dcmotor(omega, motor):
     return tau
 
 def F_Drive(omega, rover):
-    if type(rover) != "dict":
+    if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
 
     if type(omega) != np.ndarray:
