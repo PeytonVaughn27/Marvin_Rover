@@ -56,6 +56,8 @@ def tau_dcmotor(omega, motor):
             else:
                 raise Exception("Something went wrong")
 
+    return tau
+
 def F_Drive(omega, rover):
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
