@@ -109,6 +109,9 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
     
     if type(terrain_angle) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
+
+    if len(terrain_angle) != len(omega):
+        raise ValueError("Input arrays are not the same length, fuck you")
     
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
@@ -122,16 +125,20 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
     if crr < 0:
         raise ValueError("Crr is negative, fuck you")
 
-    v = omega * rover["wheel_assembly"]["wheel"]["radius"]
-    Frr = np.array([])
     for i in range(len(terrain_angle)):
         angle = terrain_angle[i]
         if angle < -75  or angle > 75:
             raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
-
-        Frr = np.append(Frr, erf(40 * v.astype(float)) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(angle)) / 6)
-    return Frr
-
-def F_net():
-    1
-    return
+        
+    if type(omega) == float or type(omega) == int:
+        v = (omega / get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"]
+        frr = np.array([])
+        for i in range(len(terrain_angle)):
+            frr = np.append(frr, -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
+    else:
+        frr = np.array([])
+        for i in range(len(omega)):
+            v = (omega[i] / get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"]
+            frr = np.append(frr, -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
+        
+    return frr
