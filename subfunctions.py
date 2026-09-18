@@ -77,13 +77,6 @@ def F_drive(omega, rover):
     return Fd
 
 def F_gravity(terrain_angle, rover, planet):
-    
-    if type(terrain_angle) != np.ndarray:
-        raise TypeError("Input is not a np.ndarray, fuck you")
-    
-    if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
-
     if type(planet) != dict:
         raise TypeError("Input is not a dict, fuck you")
     
@@ -97,5 +90,4 @@ def F_gravity(terrain_angle, rover, planet):
 
         Force_g = np.append(Force_g, mass * planet["gravity"] * np.sin(np.radians(angle)))
     
-    return Force_g                  
-
+    return Force_g                                 
