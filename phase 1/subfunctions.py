@@ -68,13 +68,16 @@ def F_gravity(terrain_angle, rover, planet):
     if type(planet) != dict:
         raise TypeError("Input is not a dict, fuck you")
     
-    for i in terrain_angle:
-        if i < -75 * np.pi/180 or i > 75 * np.pi/180:
-            raise ValueError("Terrain angle is out of bounds, fuck you")
+    Force_g = np.array([])
+    for angle in terrain_angle:
+        if angle < -75  or angle > 75:
+            raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
         
-        angle = i
         mass = get_mass(rover)
 
-        Force_g = mass * planet["gravity"] * np.sin(angle)  
+
+        Force_g = np.append(Force_g, mass * planet["gravity"] * np.sin(np.radians(angle)))
     
     return Force_g                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+ftg = ([ 5, 0, 10, 70], )
