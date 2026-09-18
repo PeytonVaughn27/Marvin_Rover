@@ -130,14 +130,14 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
             raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
         
     if type(omega) == float or type(omega) == int:
-        v = omega * get_gear_ratio(rover["wheel_assembly"]["speed_reducer"]) * rover["wheel_assembly"]["wheel"]["radius"]
+        v = (omega / get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"]
         frr = np.array([])
         for i in range(len(terrain_angle)):
             frr = np.append(frr, -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
     else:
         frr = np.array([])
         for i in range(len(omega)):
-            v = omega[i] * get_gear_ratio(rover["wheel_assembly"]["speed_reducer"]) * rover["wheel_assembly"]["wheel"]["radius"]
+            v = (omega[i] / get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"]
             frr = np.append(frr, -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
         
     return frr
