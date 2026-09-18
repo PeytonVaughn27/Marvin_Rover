@@ -62,7 +62,10 @@ def F_drive(omega, rover):
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
 
-    if (type(omega) != float and type(omega) != int) and (type(omega) != np.ndarray):
+    if type(omega) == list:
+        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+
+    if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
         raise TypeError("Input is not a 1D vector or scalar, fuck you")
 
     tau = tau_dcmotor(omega, rover["wheel_assembly"]["motor"])
