@@ -95,7 +95,7 @@ def F_gravity(terrain_angle, rover, planet):
     Force_g = np.array([])
     for angle in terrain_angle:
         if angle < -75  or angle > 75:
-            raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
+            raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
         
         mass = get_mass(rover)
 
