@@ -98,8 +98,6 @@ def F_gravity(terrain_angle, rover, planet):
             raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
         
         mass = get_mass(rover)
-
-
         Force_g = np.append(Force_g, mass * planet["g"] * np.sin(np.radians(angle)))
     
     return Force_g                              
