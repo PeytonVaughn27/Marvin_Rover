@@ -82,7 +82,8 @@ def F_drive(omega, rover):
     return Fd
 
 def F_gravity(terrain_angle, rover, planet):
-    
+
+
     if type(terrain_angle) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
     
@@ -130,3 +131,5 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
 
         Frr = np.append(Frr, erf(40 * v.astype(float)) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(angle)) / 6)
     return Frr
+
+def F_net():
