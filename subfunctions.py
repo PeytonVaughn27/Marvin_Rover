@@ -1,4 +1,6 @@
 
+from math import erf
+
 import numpy as np
 
 def get_mass(rover):
