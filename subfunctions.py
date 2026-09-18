@@ -16,16 +16,16 @@ def get_mass(rover):
         return m_total
 
 def get_gear_ratio(speed_reducer):
+    if type(speed_reducer) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+    
     if type(speed_reducer["type"]) != str:
         raise TypeError(f"Just.\n fuck you")
 
     if (speed_reducer["type"]).lower() != "reverted":
         raise TypeError("Type is not reverted, fuck you")
-
-    if type(speed_reducer) != dict:
-        raise TypeError("Input is not a dict, fuck you")
-    else:
-        ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
+    
+    ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
     return ratio
 
 def tau_dcmotor(omega, motor):
