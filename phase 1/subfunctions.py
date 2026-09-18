@@ -142,3 +142,32 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
             frr = np.append(frr, -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
         
     return frr
+
+def F_net(omega, terrain_angle, rover, planet, crr):
+
+    if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
+        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+
+    if type(terrain_angle) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
+
+    if len(terrain_angle) != len(omega):
+        raise ValueError("Input arrays are not the same length, fuck you")
+
+    if type(rover) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+
+    if type(planet) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+
+
+    if type(crr) != float and type(crr) != int :
+        raise Exception(f"Crr is not a scalar, fuck you\n{type(crr)}\n {crr}")
+
+    if crr < 0:
+        raise ValueError("Crr is negative, fuck you")
+
+    Fnet = np.array([])
+    for i in range(len(omega)):
+        Fnet = np.append(Fnet,F_rolling(omega, terrain_angle, rover, planet, crr)[i]+F_gravity(terrain_angle, rover, planet)[i]+F_drive(omega, rover)[i])
+    return Fnet
