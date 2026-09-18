@@ -57,6 +57,8 @@ def tau_dcmotor(omega, motor):
                 tau = np.append(tau, motor["torque_stall"])
             else:
                 raise Exception("Something went wrong")
+            
+    return tau
 
     return tau
 
