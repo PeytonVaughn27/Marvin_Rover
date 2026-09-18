@@ -131,12 +131,14 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
         
     if type(omega) == float or type(omega) == int:
         v = omega * get_gear_ratio(rover["wheel_assembly"]["speed_reducer"]) * rover["wheel_assembly"]["wheel"]["radius"]
-        Frr = -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(angle))
+        frr = np.array([])
+        for i in range(len(terrain_angle)):
+            Frr = np.append(frr, erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(angle)))
     else:
         Frr = np.array([])
         for i in range(len(omega)):
             v = omega[i] * get_gear_ratio(rover["wheel_assembly"]["speed_reducer"]) * rover["wheel_assembly"]["wheel"]["radius"]
-            Frr = np.append(Frr, -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
+            Frr = np.append(Frr, erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
 
 
         
