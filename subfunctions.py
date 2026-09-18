@@ -100,7 +100,7 @@ def F_gravity(terrain_angle, rover, planet):
         mass = get_mass(rover)
 
 
-        Force_g = np.append(Force_g, mass * planet["gravity"] * np.sin(np.radians(angle)))
+        Force_g = np.append(Force_g, mass * planet["g"] * np.sin(np.radians(angle)))
     
     return Force_g                              
 
@@ -130,5 +130,5 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
         if angle < -75  or angle > 75:
             raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
 
-        Frr = np.append(Frr, erf(40 * v.astype(float)) * crr * get_mass(rover) * planet["gravity"] * np.cos(np.radians(angle)) / 6)
+        Frr = np.append(Frr, erf(40 * v.astype(float)) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(angle)) / 6)
     return Frr
