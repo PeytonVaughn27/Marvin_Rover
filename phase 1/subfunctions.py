@@ -50,15 +50,14 @@ def F_Drive(omega, rover):
     
 def F_gravity(terrain_angle, rover, planet):
     
-    print(isinstance(terrain_angle, np.ndarray))
-    if type(terrain_angle) != np.ndarray:
+    if not isinstance(terrain_angle, np.ndarray):
         raise TypeError("Input is not a np.ndarray, fuck you")
     
-    if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+    if not isinstance(rover, dict):
+        raise TypeError(f"Input is not a dict, fuck you is it {type(rover)}")
 
-    if type(planet) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+    if not isinstance(planet, dict):
+        raise TypeError(f"Input is not a dict, fuck you it is {type(planet)}")
     
     Force_g = np.array([])
     for angle in terrain_angle:
