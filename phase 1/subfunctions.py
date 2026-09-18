@@ -129,6 +129,7 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
         angle = terrain_angle[i]
         if angle < -75  or angle > 75:
             raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
+<<<<<<< Updated upstream:phase 1/subfunctions.py
         
     if type(omega) == float or type(omega) == int:
         v = (omega / get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"]
@@ -142,3 +143,31 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
             frr = np.append(frr, -erf(40 * v) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(terrain_angle[i])))
         
     return frr
+=======
+
+        Frr = np.append(Frr, erf(40 * v.astype(float)) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(angle)) / 6)
+    return Frr
+
+def F_net(omega, terrain_angle, rover, planet, crr):
+    if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
+        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        
+    if type(terrain_angle) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
+    
+    if type(rover) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+
+    if type(planet) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+    
+    if type(crr) != float and type(crr) != int:
+        raise TypeError("Input is not a float or int, fuck you")
+
+    if crr < 0:
+        raise ValueError("Crr is negative, fuck you")
+
+    F_net = np.array([])
+    for i in range(len()):
+    return
+>>>>>>> Stashed changes:subfunctions.py
