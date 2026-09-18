@@ -162,7 +162,7 @@ def F_net(omega, terrain_angle, rover, planet, crr):
 
 
     if type(crr) != float and type(crr) != int :
-        raise Exception(f"Crr is not a scalar, fuck you\n{type(crr)}\n {crr}")
+        raise Exception(f"Crr is not a scalar, fuck you")
 
     if crr < 0:
         raise ValueError("Crr is negative, fuck you")
