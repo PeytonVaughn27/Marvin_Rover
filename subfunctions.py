@@ -1,4 +1,6 @@
 
+from math import erf
+
 import numpy as np
 
 def get_mass(rover):
@@ -16,16 +18,16 @@ def get_mass(rover):
         return m_total
 
 def get_gear_ratio(speed_reducer):
+    if type(speed_reducer) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+    
     if type(speed_reducer["type"]) != str:
         raise TypeError(f"Just.\n fuck you")
 
-    if (speed_reducer["type"]).lower() == "reverted":
+    if (speed_reducer["type"]).lower() != "reverted":
         raise TypeError("Type is not reverted, fuck you")
-
-    if type(speed_reducer) != dict:
-        raise TypeError("Input is not a dict, fuck you")
-    else:
-        ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
+    
+    ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
     return ratio
 
 def tau_dcmotor(omega, motor):
@@ -62,6 +64,9 @@ def F_drive(omega, rover):
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
 
+    if type(omega) == list:
+        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+
     if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
         raise TypeError("Input is not a 1D vector or scalar, fuck you")
 
@@ -90,12 +95,38 @@ def F_gravity(terrain_angle, rover, planet):
     Force_g = np.array([])
     for angle in terrain_angle:
         if angle < -75  or angle > 75:
-            raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
+            raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
         
         mass = get_mass(rover)
-
-
-        Force_g = np.append(Force_g, mass * planet["gravity"] * np.sin(np.radians(angle)))
+        Force_g = np.append(Force_g, mass * planet["g"] * np.sin(np.radians(angle)))
     
-    return Force_g                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+    return Force_g                              
 
+def F_rolling(omega, terrain_angle, rover, planet, crr):
+    if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
+        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+    
+    if type(terrain_angle) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
+    
+    if type(rover) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+
+    if type(planet) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+    
+    if type(crr) != float and type(crr) != int:
+        raise TypeError("Input is not a float or int, fuck you")
+
+    if crr < 0:
+        raise ValueError("Crr is negative, fuck you")
+
+    v = omega * rover["wheel_assembly"]["wheel"]["radius"]
+    Frr = np.array([])
+    for i in range(len(terrain_angle)):
+        angle = terrain_angle[i]
+        if angle < -75  or angle > 75:
+            raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
+
+        Frr = np.append(Frr, erf(40 * v.astype(float)) * crr * get_mass(rover) * planet["g"] * np.cos(np.radians(angle)) / 6)
+    return Frr
