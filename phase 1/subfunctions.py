@@ -2,8 +2,8 @@
 import numpy as np
 
 def get_mass(rover):
-    if type(rover) != "dict":
-        raise TypeError("Input is not a dict, fuck you")
+    if not isinstance(rover, dict):
+        raise TypeError(f"Input is not a dict, fuck you is it {type(rover)}")
     else:
         m_wheels = (rover["wheel_assembly"]["wheel"]["mass"]*6)
         m_spd_rdcr = (rover["wheel_assembly"]["speed_reducer"]["mass"]*6)
@@ -50,25 +50,32 @@ def F_Drive(omega, rover):
     
 def F_gravity(terrain_angle, rover, planet):
     
-    if not isinstance(terrain_angle, np.ndarray):
+    if not isinstance(terrain_angle, np.ndarray or int or float):
         raise TypeError("Input is not a np.ndarray, fuck you")
     
     if not isinstance(rover, dict):
         raise TypeError(f"Input is not a dict, fuck you is it {type(rover)}")
 
     if not isinstance(planet, dict):
-        raise TypeError(f"Input is not a dict, fuck you it is {type(planet)}")
+        raise TypeError(f" dict, fuck you {type(planet)}")
+    
+    for i in terrain_angle:
+        if i < -75 or i > 75:
+            raise ValueError(f"Terrain angle of array is out of bounds -75 and 75")
     
     Force_g = np.array([])
+    
+    #print(f" angle: {terrain_angle}")
+    
     for angle in terrain_angle:
-        if angle < -75  or angle > 75:
-            raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
+       # if angle <= -75  or angle >= 75:
+            #raise ValueError(f"Terrain angle of array is out of bounds")
         
         mass = get_mass(rover)
-
-
-        Force_g = np.append(Force_g, mass * planet["gravity"] * np.sin(np.radians(angle)))
-    
-    return Force_g                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-
-ftg = ([ 5, 0, 10, 70], )
+        
+        
+        Force_g = np.append( Force_g,(-1) * mass *planet["g"] * np.sin(np.radians(angle)))
+        #print(f"Force_g: {Force_g} mass: {mass} planet['g']: {planet['g']} angle: {angle}")
+        
+            
+    return Force_g                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
