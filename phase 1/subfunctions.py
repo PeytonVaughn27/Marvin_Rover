@@ -82,7 +82,8 @@ def F_drive(omega, rover):
     return Fd
 
 def F_gravity(terrain_angle, rover, planet):
-    
+
+
     if type(terrain_angle) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
     
