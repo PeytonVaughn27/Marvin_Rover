@@ -19,7 +19,7 @@ def get_gear_ratio(speed_reducer):
     if type(speed_reducer["type"]) != str:
         raise TypeError(f"Just.\n fuck you")
 
-    if (speed_reducer["type"]).lower() == "reverted":
+    if (speed_reducer["type"]).lower() != "reverted":
         raise TypeError("Type is not reverted, fuck you")
 
     if type(speed_reducer) != dict:
@@ -98,3 +98,4 @@ def F_gravity(terrain_angle, rover, planet):
         Force_g = np.append(Force_g, mass * planet["gravity"] * np.sin(np.radians(angle)))
     
     return Force_g                  
+
