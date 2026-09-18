@@ -56,15 +56,34 @@ def tau_dcmotor(omega, motor):
             else:
                 raise Exception("Something went wrong")
 
-def F_Drive(omega, rover):
+    return tau
+
+def F_drive(omega, rover):
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
 
-    if type(omega) != np.ndarray:
-        raise TypeError("Input is not a np.ndarray, fuck you")
+    if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
+        raise TypeError("Input is not a 1D vector or scalar, fuck you")
 
+    tau = tau_dcmotor(omega, rover["wheel_assembly"]["motor"])
+    ng = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])
+    Fd = np.array([])
+    for i in tau:
+        Fd = np.append(Fd,6*(i*ng) / rover["wheel_assembly"]["wheel"]["radius"])
+
+    if type(Fd) != np.ndarray:
+        raise TypeError("Output is not a np.ndarray, fuck you")
     
+    return Fd
+
 def F_gravity(terrain_angle, rover, planet):
+    
+    if type(terrain_angle) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
+    
+    if type(rover) != dict:
+        raise TypeError("Input is not a dict, fuck you")
+
     if type(planet) != dict:
         raise TypeError("Input is not a dict, fuck you")
     
@@ -80,4 +99,3 @@ def F_gravity(terrain_angle, rover, planet):
     
     return Force_g                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 
-ftg = ([ 5, 0, 10, 70], )
