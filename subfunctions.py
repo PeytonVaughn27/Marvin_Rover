@@ -86,6 +86,9 @@ def F_drive(omega, rover):
 def F_gravity(terrain_angle, rover, planet):
     if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
         raise TypeError("Input is not a np.ndarray, fuck you")
+
+    if np.isscalar(terrain_angle):
+        terrain_angle = np.array([terrain_angle])
     
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
@@ -94,19 +97,13 @@ def F_gravity(terrain_angle, rover, planet):
         raise TypeError("Input is not a dict, fuck you")
     
     Force_g = np.array([])
-    if not np.isscalar(terrain_angle):
-        for angle in terrain_angle:
-            if angle < -75  or angle > 75:
-                raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
-        
+    for angle in terrain_angle:
+        if angle < -75  or angle > 75:
+            raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
+            
         mass = get_mass(rover)
         Force_g = np.append(Force_g, -mass * planet["g"] * np.sin(np.radians(angle)))
-    else:
-        if terrain_angle < -75  or terrain_angle > 75:
-            raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
         
-        mass = get_mass(rover)
-        Force_g = -mass * planet["g"] * np.sin(np.radians(terrain_angle))
     return Force_g                              
 
 def F_rolling(omega, terrain_angle, rover, planet, crr):
@@ -181,8 +178,6 @@ def F_net(omega, terrain_angle, rover, planet, crr):
         for i in range(len(omega)):
             Fnet = np.append(Fnet,F_rolling(omega, terrain_angle, rover, planet, crr)[i]+F_gravity(terrain_angle, rover, planet)[i]+F_drive(omega, rover)[i])
     else:
-        Fnet = float(F_rolling(omega, terrain_angle, rover, planet, crr))+float(F_gravity(terrain_angle, rover, planet))+float(F_drive(omega, rover))
-        if type(Fnet) == np.ndarray:
-            Fnet = Fnet[0]
+        Fnet = float(F_rolling(omega, terrain_angle, rover, planet, crr))+(F_gravity(terrain_angle, rover, planet)[0])+float(F_drive(omega, rover))
 
     return Fnet
