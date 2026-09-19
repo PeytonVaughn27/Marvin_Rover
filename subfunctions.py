@@ -86,6 +86,9 @@ def F_drive(omega, rover):
 def F_gravity(terrain_angle, rover, planet):
     if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
         raise TypeError("Input is not a np.ndarray, fuck you")
+
+    if np.isscalar(terrain_angle):
+        terrain_angle = np.array([terrain_angle])
     
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
