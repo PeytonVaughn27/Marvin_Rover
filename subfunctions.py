@@ -182,7 +182,5 @@ def F_net(omega, terrain_angle, rover, planet, crr):
             Fnet = np.append(Fnet,F_rolling(omega, terrain_angle, rover, planet, crr)[i]+F_gravity(terrain_angle, rover, planet)[i]+F_drive(omega, rover)[i])
     else:
         Fnet = float(F_rolling(omega, terrain_angle, rover, planet, crr))+float(F_gravity(terrain_angle, rover, planet))+float(F_drive(omega, rover))
-        if type(Fnet) == np.ndarray:
-            Fnet = Fnet[0]
 
     return Fnet
