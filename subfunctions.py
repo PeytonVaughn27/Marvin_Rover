@@ -73,12 +73,12 @@ def F_drive(omega, rover):
     tau = tau_dcmotor(omega, rover["wheel_assembly"]["motor"])
     ng = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])
     Fd = np.array([])
-    for i in tau:
-        Fd = np.append(Fd,6*(i*ng) / rover["wheel_assembly"]["wheel"]["radius"])
+    if not np.isscalar(omega):
+        for i in tau:
+            Fd = np.append(Fd,6*(i*ng) / rover["wheel_assembly"]["wheel"]["radius"])
+    else:
+        Fd = 6*(tau*ng) / rover["wheel_assembly"]["wheel"]["radius"]
 
-    if type(Fd) != np.ndarray:
-        raise TypeError("Output is not a np.ndarray, fuck you")
-    
     return Fd
 
 def F_gravity(terrain_angle, rover, planet):
@@ -109,9 +109,10 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
     
     if type(terrain_angle) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
-
-    if len(terrain_angle) != len(omega):
-        raise ValueError("Input arrays are not the same length, fuck you")
+    
+    if not np.isscalar(omega):
+        if len(terrain_angle) != len(omega):
+            raise ValueError("Input arrays are not the same length, fuck you")
     
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
@@ -151,8 +152,9 @@ def F_net(omega, terrain_angle, rover, planet, crr):
     if type(terrain_angle) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
 
-    if len(terrain_angle) != len(omega):
-        raise ValueError("Input arrays are not the same length, fuck you")
+    if not np.isscalar(omega):
+        if len(terrain_angle) != len(omega):
+            raise ValueError("Input arrays are not the same length, fuck you")
 
     if type(rover) != dict:
         raise TypeError("Input is not a dict, fuck you")
@@ -167,7 +169,12 @@ def F_net(omega, terrain_angle, rover, planet, crr):
     if crr < 0:
         raise ValueError("Crr is negative, fuck you")
 
-    Fnet = np.array([])
-    for i in range(len(omega)):
-        Fnet = np.append(Fnet,F_rolling(omega, terrain_angle, rover, planet, crr)[i]+F_gravity(terrain_angle, rover, planet)[i]+F_drive(omega, rover)[i])
+    if not np.isscalar(omega):
+        Fnet = np.array([])
+        for i in range(len(omega)):
+            Fnet = np.append(Fnet,F_rolling(omega, terrain_angle, rover, planet, crr)[i]+F_gravity(terrain_angle, rover, planet)[i]+F_drive(omega, rover)[i])
+    else:
+        Fnet = F_rolling(omega, terrain_angle, rover, planet, crr)+F_gravity(terrain_angle, rover, planet)+F_drive(omega, rover)
+        Fnet = Fnet[0]
+
     return Fnet
