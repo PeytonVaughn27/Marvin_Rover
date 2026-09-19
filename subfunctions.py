@@ -84,7 +84,9 @@ def F_drive(omega, rover):
     return Fd
 
 def F_gravity(terrain_angle, rover, planet):
-    if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
+
+
+    if type(terrain_angle) != np.ndarray:
         raise TypeError("Input is not a np.ndarray, fuck you")
     
     if type(rover) != dict:
@@ -94,27 +96,21 @@ def F_gravity(terrain_angle, rover, planet):
         raise TypeError("Input is not a dict, fuck you")
     
     Force_g = np.array([])
-    if not np.isscalar(terrain_angle):
-        for angle in terrain_angle:
-            if angle < -75  or angle > 75:
-                raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
-        
-        mass = get_mass(rover)
-        Force_g = np.append(Force_g, -mass * planet["g"] * np.sin(np.radians(angle)))
-    else:
-        if terrain_angle < -75  or terrain_angle > 75:
+    for angle in terrain_angle:
+        if angle < -75  or angle > 75:
             raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
         
         mass = get_mass(rover)
-        Force_g = -mass * planet["g"] * np.sin(np.radians(terrain_angle))
+        Force_g = np.append(Force_g, -mass * planet["g"] * np.sin(np.radians(angle)))
+    
     return Force_g                              
 
 def F_rolling(omega, terrain_angle, rover, planet, crr):
     if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
         raise TypeError("Input is not a 1D vector or scalar, fuck you")
     
-    if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+    if type(terrain_angle) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
     
     if not np.isscalar(omega):
         if len(terrain_angle) != len(omega):
@@ -132,11 +128,10 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
     if crr < 0:
         raise ValueError("Crr is negative, fuck you")
 
-    if not np.isscalar(terrain_angle):
-        for i in range(len(terrain_angle)):
-            angle = terrain_angle[i]
-            if angle < -75  or angle > 75:
-                raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
+    for i in range(len(terrain_angle)):
+        angle = terrain_angle[i]
+        if angle < -75  or angle > 75:
+            raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
         
     if type(omega) == float or type(omega) == int:
         v = (omega / get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"]
@@ -156,8 +151,8 @@ def F_net(omega, terrain_angle, rover, planet, crr):
     if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
         raise TypeError("Input is not a 1D vector or scalar, fuck you")
 
-    if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+    if type(terrain_angle) != np.ndarray:
+        raise TypeError("Input is not a np.ndarray, fuck you")
 
     if not np.isscalar(omega):
         if len(terrain_angle) != len(omega):
@@ -181,8 +176,7 @@ def F_net(omega, terrain_angle, rover, planet, crr):
         for i in range(len(omega)):
             Fnet = np.append(Fnet,F_rolling(omega, terrain_angle, rover, planet, crr)[i]+F_gravity(terrain_angle, rover, planet)[i]+F_drive(omega, rover)[i])
     else:
-        Fnet = float(F_rolling(omega, terrain_angle, rover, planet, crr))+float(F_gravity(terrain_angle, rover, planet))+float(F_drive(omega, rover))
-        if type(Fnet) == np.ndarray:
-            Fnet = Fnet[0]
+        Fnet = F_rolling(omega, terrain_angle, rover, planet, crr)+F_gravity(terrain_angle, rover, planet)+F_drive(omega, rover)
+        Fnet = Fnet[0]
 
     return Fnet
