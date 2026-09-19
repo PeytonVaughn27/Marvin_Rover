@@ -107,6 +107,7 @@ def F_gravity(terrain_angle, rover, planet):
         
         mass = get_mass(rover)
         Force_g = -mass * planet["g"] * np.sin(np.radians(terrain_angle))
+        Force_g = np.array([Force_g])
     return Force_g                              
 
 def F_rolling(omega, terrain_angle, rover, planet, crr):
