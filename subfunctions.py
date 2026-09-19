@@ -93,21 +93,14 @@ def F_gravity(terrain_angle, rover, planet):
     if type(planet) != dict:
         raise TypeError("Input is not a dict, fuck you")
     
-    if not np.isscalar(terrain_angle):
-        Force_g = np.array([])
-        for angle in terrain_angle:
-            if angle < -75  or angle > 75:
-                raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
-        
+    Force_g = np.array([])
+    for angle in terrain_angle:
+        if angle < -75  or angle > 75:
+            raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
+            
         mass = get_mass(rover)
         Force_g = np.append(Force_g, -mass * planet["g"] * np.sin(np.radians(angle)))
-    else:
-        if terrain_angle < -75  or terrain_angle > 75:
-            raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
         
-        mass = get_mass(rover)
-        Force_g = -mass * planet["g"] * np.sin(np.radians(terrain_angle))
-        Force_g = np.array([Force_g])
     return Force_g                              
 
 def F_rolling(omega, terrain_angle, rover, planet, crr):
