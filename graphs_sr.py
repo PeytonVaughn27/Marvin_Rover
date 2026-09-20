@@ -5,7 +5,7 @@ import subfunctions as sf
 
 stal_trq =170
 nld_trq =  0
-nld_spd = 3.8* sf.get_gear_ratio()
+nld_spd = 3.8* sf.get_gear_ratio(speed_reducer)
 
 
 max_w = nld_spd
