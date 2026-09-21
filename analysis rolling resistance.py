@@ -26,7 +26,7 @@ terrain_angle = 0
 for i in range(len(crr)):
     temp_crr = float(crr[i])
     omega_max = np.append(omega_max, root_scalar(lambda x: sf.F_net(x, terrain_angle, rover, planet, temp_crr), bracket=[0, rover["wheel_assembly"]["motor"]["speed_noload"]], method="bisect").root)
-    v_max = np.append(v_max, omega_max[i] * rover["wheel_assembly"]["wheel"]["radius"])
+    v_max = np.append(v_max, (omega_max[i]/sf.get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"])
 
 plt.plot(crr, v_max)
 plt.xlabel('Crr')
