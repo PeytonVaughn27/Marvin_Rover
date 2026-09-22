@@ -5,7 +5,7 @@ import numpy as np
 
 def get_mass(rover):
     if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
     else:
         m_wheels = (rover["wheel_assembly"]["wheel"]["mass"]*6)
         m_spd_rdcr = (rover["wheel_assembly"]["speed_reducer"]["mass"]*6)
@@ -19,23 +19,23 @@ def get_mass(rover):
 
 def get_gear_ratio(speed_reducer):
     if type(speed_reducer) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
     
     if type(speed_reducer["type"]) != str:
-        raise TypeError(f"Just.\n fuck you")
+        raise TypeError(f"Just.\n")
 
     if (speed_reducer["type"]).lower() != "reverted":
-        raise TypeError("Type is not reverted, fuck you")
+        raise TypeError("Type is not reverted.")
     
     ratio = (speed_reducer["diam_gear"]/speed_reducer["diam_pinion"])**2
     return ratio
 
 def tau_dcmotor(omega, motor):
     if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        raise TypeError("Input is not a 1D vector or scalar.")
 
     if type(motor) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
 
     if np.isscalar(omega):
         if (omega <= motor["speed_noload"]) and (omega >= 0):
@@ -62,13 +62,13 @@ def tau_dcmotor(omega, motor):
 
 def F_drive(omega, rover):
     if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
 
     if type(omega) == list:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        raise TypeError("Input is not a 1D vector or scalar.")
 
     if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        raise TypeError("Input is not a 1D vector or scalar.")
 
     tau = tau_dcmotor(omega, rover["wheel_assembly"]["motor"])
     ng = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])
@@ -85,21 +85,21 @@ def F_drive(omega, rover):
 
 def F_gravity(terrain_angle, rover, planet):
     if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
-        raise TypeError("Input is not a np.ndarray, fuck you")
+        raise TypeError("Input is not a np.ndarray.")
 
     if np.isscalar(terrain_angle):
         terrain_angle = np.array([terrain_angle])
     
     if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
 
     if type(planet) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
     
     Force_g = np.array([])
     for angle in terrain_angle:
         if angle < -75  or angle > 75:
-            raise ValueError(f"Terrain angle is outside of +75 or -75, fuck you")
+            raise ValueError(f"Terrain angle is outside of +75 or -75.")
             
         mass = get_mass(rover)
         Force_g = np.append(Force_g, -mass * planet["g"] * np.sin(np.radians(angle)))
@@ -108,32 +108,32 @@ def F_gravity(terrain_angle, rover, planet):
 
 def F_rolling(omega, terrain_angle, rover, planet, crr):
     if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        raise TypeError("Input is not a 1D vector or scalar.")
     
     if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        raise TypeError("Input is not a 1D vector or scalar.")
     
     if not np.isscalar(omega):
         if len(terrain_angle) != len(omega):
-            raise ValueError("Input arrays are not the same length, fuck you")
+            raise ValueError("Input arrays are not the same length.")
     
     if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
 
     if type(planet) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
     
     if type(crr) != float and type(crr) != int:
-        raise TypeError("Input is not a float or int, fuck you")
+        raise TypeError("Input is not a float or int.")
 
     if crr < 0:
-        raise ValueError("Crr is negative, fuck you")
+        raise ValueError("Crr is negative.")
 
     if not np.isscalar(terrain_angle):
         for i in range(len(terrain_angle)):
             angle = terrain_angle[i]
             if angle < -75  or angle > 75:
-                raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds, fuck you")
+                raise ValueError(f"Terrain angle {angle} out of array {terrain_angle} is out of bounds.")
         
     if type(omega) == float or type(omega) == int:
         v = (omega / get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])) * rover["wheel_assembly"]["wheel"]["radius"]
@@ -151,27 +151,27 @@ def F_rolling(omega, terrain_angle, rover, planet, crr):
 def F_net(omega, terrain_angle, rover, planet, crr):
 
     if (type(omega) != float and type(omega) != int) and omega.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        raise TypeError("Input is not a 1D vector or scalar.")
 
     if (type(terrain_angle) != float and type(terrain_angle) != int) and terrain_angle.ndim > 1:
-        raise TypeError("Input is not a 1D vector or scalar, fuck you")
+        raise TypeError("Input is not a 1D vector or scalar.")
 
     if not np.isscalar(omega):
         if len(terrain_angle) != len(omega):
-            raise ValueError("Input arrays are not the same length, fuck you")
+            raise ValueError("Input arrays are not the same length.")
 
     if type(rover) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
 
     if type(planet) != dict:
-        raise TypeError("Input is not a dict, fuck you")
+        raise TypeError("Input is not a dict.")
 
 
     if type(crr) != float and type(crr) != int :
-        raise Exception(f"Crr is not a scalar, fuck you")
+        raise Exception(f"Crr is not a scalar.")
 
     if crr < 0:
-        raise ValueError("Crr is negative, fuck you")
+        raise ValueError("Crr is negative.")
 
     if not np.isscalar(omega):
         Fnet = np.array([])
