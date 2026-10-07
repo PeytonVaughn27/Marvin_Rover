@@ -189,4 +189,5 @@ def motorW(v, rover):
     if type(rover) != dict:
         raise Exception("Rover is not a dict")
     w = get_gear_ratio(rover)*v
+    print(w)
     return w
