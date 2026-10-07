@@ -184,9 +184,9 @@ def F_net(omega, terrain_angle, rover, planet, crr):
 
 def motorW(v, rover):
     '''aaaaaaaaaaaaaaaaa'''
-    if((str(type(v)) != "<class 'float'>" and str(type(v)) != "<class 'int'>") and (v.ndim > 1)):
+    if (type(v) != float and type(v) != int) and v.ndim > 1:
         raise TypeError("Input is not a 1D vector or scalar.")
     if type(rover) != dict:
         raise Exception("Rover is not a dict")
-    w = get_gear_ratio*v
+    w = get_gear_ratio(rover)*v
     return w
