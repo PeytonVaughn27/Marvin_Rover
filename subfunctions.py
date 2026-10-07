@@ -181,3 +181,11 @@ def F_net(omega, terrain_angle, rover, planet, crr):
         Fnet = float(F_rolling(omega, terrain_angle, rover, planet, crr))+(F_gravity(terrain_angle, rover, planet)[0])+float(F_drive(omega, rover))
 
     return Fnet
+
+def motorW(v, rover):
+    if (type(v) != float and type(v) != int) and v.ndim > 1:
+        raise TypeError("Input is not a 1D vector or scalar.")
+    if type(rover) != dict:
+        raise Exception("Tover is not a dict")
+    w = get_gear_ratio*v
+    return w
