@@ -188,5 +188,5 @@ def motorW(v, rover):
         raise Exception("Input is not a 1D vector or scalar.")
     if type(rover) != dict:
         raise Exception("Rover is not a dict")
-    w = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])*v
+    w = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])/v
     return w
