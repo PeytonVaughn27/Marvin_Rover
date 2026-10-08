@@ -228,7 +228,7 @@ def rover_dynamics(t,y,rover,planet,experiment):
     alpha_deg = experiment["alpha_deg"]
     alpha_fun = interp1d(alpha_dist, alpha_deg, kind = 'cubic', fill_value='extrapolate') 
     
-    pos = np.array([y[1]])
+    pos = y[1]
     vel = y[0]
 
     terrain_angle = alpha_fun(pos)
