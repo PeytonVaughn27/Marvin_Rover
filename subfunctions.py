@@ -224,15 +224,14 @@ def rover_dynamics(t,y,rover,planet,experiment):
     is_dict(planet)
     is_dict(experiment)
 
-    ex, end = experiment
-    alpha_dist = ex["alpha_dist"]
-    alpha_deg = ex["alpha_deg"]
+    alpha_dist = experiment["alpha_dist"]
+    alpha_deg = experiment["alpha_deg"]
     alpha_fun = interp1d(alpha_dist, alpha_deg, kind = 'cubic', fill_value='extrapolate') 
     
     terrain_angle = alpha_fun(y[1])
     m = get_mass(rover)
     w = motorW(y[0],rover)
-    crr = ex["Crr"]
+    crr = experiment["Crr"]
     f = F_net(w,terrain_angle, rover,planet,crr)
 
     pos = y[1]
