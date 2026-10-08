@@ -5,14 +5,28 @@ import numpy as np
 
 def is_scalar_or_1d(var):
     if (type(var) != float and type(var) != int) and var.ndim > 1:
-            raise Exception("Input is not a 1D vector or scalar.")
-    pass
+        raise Exception("Input is not a 1D vector or scalar.")
+    else:
+        pass
 
 def is_dict(var):
     if type(var) != dict:
-        raise Exception("Rover is not a dict")
-    pass
+        raise Exception("Input is not a dictionary")
+    else:
+        pass
 
+def is_scalar(var):
+    if (type(var) != float and type(var) != int):
+        raise Exception("Input is not a scalar.")
+    else:
+        pass
+
+def is_1d(var):
+    if (type(var) != float and type(var) != int) and var.ndim > 1:
+            raise Exception("Input is not a 1D vector.")
+    else:
+        pass
+    
 
 def get_mass(rover):
     if type(rover) != dict:
@@ -194,12 +208,19 @@ def F_net(omega, terrain_angle, rover, planet, crr):
     return Fnet
 
 def motorW(v, rover):
-    '''This is motorW'''
+    '''This is motorW, this returns the angular velocity of the motor.'''
     if (type(v) != float and type(v) != int) and v.ndim > 1:
         raise Exception("Input is not a 1D vector or scalar.")
     if type(rover) != dict:
-        raise Exception("Rover is not a dict")
+        raise Exception("Input is not a dict")
     w = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])*v/rover["wheel_assembly"]["wheel"]["radius"]
     return w
 
 def rover_dynamics(t,y,rover,planet,experiment):
+    is_scalar(t)
+    is_1d(y)
+    is_dict(rover)
+    is_dict(planet)
+    is_dict(experiment)
+    
+
