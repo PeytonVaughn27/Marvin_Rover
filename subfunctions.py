@@ -217,13 +217,14 @@ def motorW(v, rover):
     return w
 
 def rover_dynamics(t,y,rover,planet,experiment):
+    '''This is rover dynamics, here we help you find the acceleration and velocity.'''
     is_scalar(t)
     is_1d(y)
     is_dict(rover)
     is_dict(planet)
     is_dict(experiment)
 
-    ex, end = experiment()
+    ex, end = experiment
     alpha_dist = ex["alpha_dist"]
     alpha_deg = ex["alpha_deg"]
     alpha_fun = interp1d(alpha_dist, alpha_deg, kind = 'cubic', fill_value='extrapolate') 
