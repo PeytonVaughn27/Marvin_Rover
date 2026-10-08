@@ -236,7 +236,7 @@ def rover_dynamics(t,y,rover,planet,experiment):
 
     pos = y[1]
     vel = y[0]
-    accel = f/m
+    accel = float(f)/m
     
     dydt = np.array([accel,vel])
 
