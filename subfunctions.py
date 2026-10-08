@@ -6,10 +6,12 @@ import numpy as np
 def is_scalar_or_1d(var):
     if (type(var) != float and type(var) != int) and var.ndim > 1:
             raise Exception("Input is not a 1D vector or scalar.")
+    pass
 
 def is_dict(var):
     if type(var) != dict:
         raise Exception("Rover is not a dict")
+    pass
 
 
 def get_mass(rover):
@@ -192,7 +194,7 @@ def F_net(omega, terrain_angle, rover, planet, crr):
     return Fnet
 
 def motorW(v, rover):
-    '''aaaaaaaaaaaaaaaaa'''
+    '''This is motorW'''
     if (type(v) != float and type(v) != int) and v.ndim > 1:
         raise Exception("Input is not a 1D vector or scalar.")
     if type(rover) != dict:
