@@ -3,6 +3,15 @@ from math import erf
 
 import numpy as np
 
+def is_scalar_or_1d(var):
+    if (type(var) != float and type(var) != int) and var.ndim > 1:
+            raise Exception("Input is not a 1D vector or scalar.")
+
+def is_dict(var):
+    if type(var) != dict:
+        raise Exception("Rover is not a dict")
+
+
 def get_mass(rover):
     if type(rover) != dict:
         raise TypeError("Input is not a dict.")
@@ -190,3 +199,5 @@ def motorW(v, rover):
         raise Exception("Rover is not a dict")
     w = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])*v/rover["wheel_assembly"]["wheel"]["radius"]
     return w
+
+def rover_dynamics(t,y,rover,planet,experiment):
