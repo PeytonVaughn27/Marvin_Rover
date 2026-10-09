@@ -1,7 +1,32 @@
 
 from math import erf
-
+from scipy.interpolate import interp1d
 import numpy as np
+
+def is_scalar_or_1d(var):
+    if (type(var) != float and type(var) != int) and var.ndim > 1:
+        raise Exception("Input is not a 1D vector or scalar.")
+    else:
+        pass
+
+def is_dict(var):
+    if type(var) != dict:
+        raise Exception("Input is not a dictionary")
+    else:
+        pass
+
+def is_scalar(var):
+    if (type(var) != float and type(var) != int):
+        raise Exception("Input is not a scalar.")
+    else:
+        pass
+
+def is_1d(var):
+    if (type(var) != float and type(var) != int) and var.ndim != 1:
+            raise Exception("Input is not a 1D vector.")
+    else:
+        pass
+    
 
 def get_mass(rover):
     if type(rover) != dict:
@@ -181,3 +206,40 @@ def F_net(omega, terrain_angle, rover, planet, crr):
         Fnet = float(F_rolling(omega, terrain_angle, rover, planet, crr))+(F_gravity(terrain_angle, rover, planet)[0])+float(F_drive(omega, rover))
 
     return Fnet
+
+def motorW(v, rover):
+    '''This is motorW, this returns the angular velocity of the motor.'''
+    if (type(v) != float and type(v) != int) and v.ndim > 1:
+        raise Exception("Input is not a 1D vector or scalar.")
+    if type(rover) != dict:
+        raise Exception("Input is not a dict")
+    w = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])*v/rover["wheel_assembly"]["wheel"]["radius"]
+    return w
+
+def rover_dynamics(t,y,rover,planet,experiment):
+    '''This is rover dynamics, here we help you find the acceleration and velocity.'''
+    is_scalar(t)
+    is_1d(y)
+    is_dict(rover)
+    is_dict(planet)
+    is_dict(experiment)
+
+    alpha_dist = experiment["alpha_dist"]
+    alpha_deg = experiment["alpha_deg"]
+    alpha_fun = interp1d(alpha_dist, alpha_deg, kind = 'cubic', fill_value='extrapolate') 
+    
+    pos = y[1]
+    vel = y[0]
+
+    terrain_angle = np.array([alpha_fun(pos)])
+    m = get_mass(rover)
+    w = np.array([motorW(vel,rover)])
+    crr = experiment["Crr"]
+    f = F_net(w,terrain_angle, rover,planet,crr)
+
+    accel = f/m
+    
+    dydt = np.array([accel,vel])
+
+    return dydt
+
