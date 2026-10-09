@@ -244,3 +244,14 @@ def rover_dynamics(t,y,rover,planet,experiment):
 
     return dydt
 
+def mechpower(v,rover):
+    '''Here at mech power, we calculate the instantaneous power using the motor torque and shaft rotation speed.'''
+    is_scalar_or_1d(v)
+    is_dict(rover)
+
+    
+    motor = rover["wheel_assembly"]["motor"]
+    mtr_w = motorW(v,rover)
+
+    p = tau_dcmotor(mtr_w,motor) * mtr_w
+    return p
