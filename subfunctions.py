@@ -255,3 +255,15 @@ def mechpower(v,rover):
 
     p = tau_dcmotor(mtr_w,motor) * mtr_w
     return p
+
+def battenergy(t,v,rover):
+    is_1d(t)
+    is_1d(v)
+    is_dict(rover)
+
+    p= mechpower(v,rover)
+    tau= tau_dcmotor()
+
+    E =
+
+    return E
