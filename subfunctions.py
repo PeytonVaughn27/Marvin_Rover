@@ -232,10 +232,11 @@ def rover_dynamics(t,y,rover,planet,experiment):
     vel = y[0]
 
     terrain_angle = np.array([alpha_fun(pos)])
-    m = get_mass(rover)
-    w = np.array([motorW(vel,rover)])
+    w = motorW(vel,rover)
     crr = experiment["Crr"]
     f = F_net(w,terrain_angle, rover,planet,crr)
+    
+    m = get_mass(rover)
 
     accel = f/m
     
