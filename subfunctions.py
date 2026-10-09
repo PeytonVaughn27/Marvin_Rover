@@ -22,7 +22,7 @@ def is_scalar(var):
         pass
 
 def is_1d(var):
-    if (type(var) != float and type(var) != int) and var.ndim > 1:
+    if (type(var) != float and type(var) != int) and var.ndim != 1:
             raise Exception("Input is not a 1D vector.")
     else:
         pass
@@ -231,9 +231,9 @@ def rover_dynamics(t,y,rover,planet,experiment):
     pos = y[1]
     vel = y[0]
 
-    terrain_angle = alpha_fun(pos)
+    terrain_angle = np.array([alpha_fun(pos)])
     m = get_mass(rover)
-    w = motorW(vel,rover)
+    w = np.array([motorW(vel,rover)])
     crr = experiment["Crr"]
     f = F_net(w,terrain_angle, rover,planet,crr)
 
