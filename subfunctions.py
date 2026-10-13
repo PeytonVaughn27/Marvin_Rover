@@ -27,6 +27,10 @@ def is_1d(var):
     else:
         pass
     
+def is_eql_length(var1, var2):
+    if len(var1) != len(var2):
+        raise ValueError("Input arrays are not the same length.")
+
 
 def get_mass(rover):
     if type(rover) != dict:
@@ -260,9 +264,11 @@ def battenergy(t,v,rover):
     is_1d(t)
     is_1d(v)
     is_dict(rover)
+    is_eql_length(t,v)
 
     p= mechpower(v,rover)
-    tau= tau_dcmotor()
+    w = motorW(v,rover)
+    tau= tau_dcmotor(w,rover)
 
     E =
 
