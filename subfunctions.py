@@ -270,6 +270,6 @@ def battenergy(t,v,rover):
     w = motorW(v,rover)
     tau= tau_dcmotor(w,rover)
 
-    E =
+    E =1
 
     return E
