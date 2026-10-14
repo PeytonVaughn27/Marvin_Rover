@@ -1,6 +1,7 @@
 
 from math import erf
 from scipy.interpolate import interp1d
+from scipy import integrate
 import numpy as np
 
 def is_scalar_or_1d(var):
@@ -273,3 +274,5 @@ def battenergy(t,v,rover):
     E =1
 
     return E
+
+def simulate_rover(rover, planet, experiment, end_event):
