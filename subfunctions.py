@@ -1,7 +1,36 @@
 
 from math import erf
-
+from scipy.interpolate import interp1d
 import numpy as np
+
+def is_scalar_or_1d(var):
+    if (type(var) != float and type(var) != int) and var.ndim > 1:
+        raise Exception("Input is not a 1D vector or scalar.")
+    else:
+        pass
+
+def is_dict(var):
+    if type(var) != dict:
+        raise Exception("Input is not a dictionary")
+    else:
+        pass
+
+def is_scalar(var):
+    if (type(var) != float and type(var) != int):
+        raise Exception("Input is not a scalar.")
+    else:
+        pass
+
+def is_1d(var):
+    if (type(var) != float and type(var) != int) and var.ndim != 1:
+            raise Exception("Input is not a 1D vector.")
+    else:
+        pass
+    
+def is_eql_length(var1, var2):
+    if len(var1) != len(var2):
+        raise ValueError("Input arrays are not the same length.")
+
 
 def get_mass(rover):
     if type(rover) != dict:
@@ -181,3 +210,66 @@ def F_net(omega, terrain_angle, rover, planet, crr):
         Fnet = float(F_rolling(omega, terrain_angle, rover, planet, crr))+(F_gravity(terrain_angle, rover, planet)[0])+float(F_drive(omega, rover))
 
     return Fnet
+
+def motorW(v, rover):
+    '''This is motorW, this returns the angular velocity of the motor.'''
+    if (type(v) != float and type(v) != int) and v.ndim > 1:
+        raise Exception("Input is not a 1D vector or scalar.")
+    if type(rover) != dict:
+        raise Exception("Input is not a dict")
+    w = get_gear_ratio(rover["wheel_assembly"]["speed_reducer"])*v/rover["wheel_assembly"]["wheel"]["radius"]
+    return w
+
+def rover_dynamics(t,y,rover,planet,experiment):
+    '''This is rover dynamics, here we help you find the acceleration and velocity.'''
+    is_scalar(t)
+    is_1d(y)
+    is_dict(rover)
+    is_dict(planet)
+    is_dict(experiment)
+
+    alpha_dist = experiment["alpha_dist"]
+    alpha_deg = experiment["alpha_deg"]
+    alpha_fun = interp1d(alpha_dist, alpha_deg, kind = 'cubic', fill_value='extrapolate') 
+    
+    pos = y[1].item()
+    vel = y[0].item()
+
+    terrain_angle = np.array([alpha_fun(pos)])
+    w = motorW(vel,rover)
+    crr = experiment["Crr"]
+    f = F_net(w,terrain_angle, rover,planet,crr)
+    
+    m = get_mass(rover)
+
+    accel = f/m
+    
+    dydt = np.array([accel,vel])
+
+    return dydt
+
+def mechpower(v,rover):
+    '''Here at mech power, we calculate the instantaneous power using the motor torque and shaft rotation speed.'''
+    is_scalar_or_1d(v)
+    is_dict(rover)
+
+    
+    motor = rover["wheel_assembly"]["motor"]
+    mtr_w = motorW(v,rover)
+
+    p = tau_dcmotor(mtr_w,motor) * mtr_w
+    return p
+
+def battenergy(t,v,rover):
+    is_1d(t)
+    is_1d(v)
+    is_dict(rover)
+    is_eql_length(t,v)
+
+    p= mechpower(v,rover)
+    w = motorW(v,rover)
+    tau= tau_dcmotor(w,rover)
+
+    E =1
+
+    return E
