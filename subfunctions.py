@@ -311,18 +311,28 @@ def end_of_mission_event(end_event):
     return events
 
 def simulate_rover(rover, planet, experiment, end_event):
+    '''Returns simulated rover telemetry data with input for rover, planet, experiment, and end_event dictionaries.'''
     if rover is not dict or planet is not dict or experiment is not dict or end_event is not dict:
         raise TypeError("Input is not a dict")
 
     f = lambda t,y: rover_dynamics(t,y,rover,planet,experiment)
 
     t_0 = experiment['time_range'][0]
-    t_end = experiment['time_range'][-1]
+    t_end = end_event['max_time']
 
-    sol = solve_ivp(f, (t_0,t_end), experiment['initial_conditions'], method = 'BDF')
+
+    sol = solve_ivp(f, (t_0,t_end), experiment['initial_conditions'], method = 'RK45', events = [end_of_mission_event(end_event)])
 
     rover_output = rover
+    rover_output['Time'] = sol.t
+    rover_output['completion_time']= sol.t_events
     rover_output['velocity'] = sol.y[0]
     rover_output['position'] = sol.y[1]
-
+    rover_output['distance_traveled'] = sol.y[1][-1] - sol.y[1][0]
+    rover_output['max_velocity'] = np.max(sol.y[0])
+    rover_output['average_velocity'] = np.mean(sol.y[0])
+    rover_output['power']= mechpower(sol.y[0],rover)*6
+    rover_output['energy']= battenergy(sol.t,sol.y[0],rover)
+    rover_output['energy_per_distance']= rover_output['energy']/rover_output['distance_traveled']
+    
     return rover_output
