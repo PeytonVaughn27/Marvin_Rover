@@ -1,6 +1,7 @@
 
 from math import erf
 from scipy.interpolate import interp1d
+from scipy.integrate import solve_ivp
 import numpy as np
 
 def is_scalar_or_1d(var):
@@ -273,3 +274,65 @@ def battenergy(t,v,rover):
     E =1
 
     return E
+
+def end_of_mission_event(end_event):
+    """
+    Defines an event that terminates the mission simulation. Mission is over
+    when rover reaches a certain distance, has moved for a maximum simulation 
+    time or has reached a minimum velocity.            
+    """
+    
+    mission_distance = end_event['max_distance']
+    mission_max_time = end_event['max_time']
+    mission_min_velocity = end_event['min_velocity']
+    
+    # Assume that y[1] is the distance traveled
+    distance_left = lambda t,y: mission_distance - y[1]
+    distance_left.terminal = True
+    
+    time_left = lambda t,y: mission_max_time - t
+    time_left.terminal = True
+    
+    velocity_threshold = lambda t,y: y[0] - mission_min_velocity;
+    velocity_threshold.terminal = True
+    velocity_threshold.direction = -1
+    
+    # terminal indicates whether any of the conditions can lead to the
+    # termination of the ODE solver. In this case all conditions can terminate
+    # the simulation independently.
+    
+    # direction indicates whether the direction along which the different
+    # conditions is reached matters or does not matter. In this case, only
+    # the direction in which the velocity treshold is arrived at matters
+    # (negative)
+    
+    events = [distance_left, time_left, velocity_threshold]
+    
+    return events
+
+def simulate_rover(rover, planet, experiment, end_event):
+    '''Returns simulated rover telemetry data with input for rover, planet, experiment, and end_event dictionaries.'''
+    if rover is not dict or planet is not dict or experiment is not dict or end_event is not dict:
+        raise TypeError("Input is not a dict")
+
+    f = lambda t,y: rover_dynamics(t,y,rover,planet,experiment)
+
+    t_0 = experiment['time_range'][0]
+    t_end = end_event['max_time']
+
+
+    sol = solve_ivp(f, (t_0,t_end), experiment['initial_conditions'], method = 'RK45', events = [end_of_mission_event(end_event)])
+
+    rover_output = rover
+    rover_output['Time'] = sol.t
+    rover_output['completion_time']= sol.t_events
+    rover_output['velocity'] = sol.y[0]
+    rover_output['position'] = sol.y[1]
+    rover_output['distance_traveled'] = sol.y[1][-1] - sol.y[1][0]
+    rover_output['max_velocity'] = np.max(sol.y[0])
+    rover_output['average_velocity'] = np.mean(sol.y[0])
+    rover_output['power']= mechpower(sol.y[0],rover)*6
+    rover_output['energy']= battenergy(sol.t,sol.y[0],rover)
+    rover_output['energy_per_distance']= rover_output['energy']/rover_output['distance_traveled']
+    
+    return rover_output
