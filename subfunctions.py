@@ -250,16 +250,26 @@ def rover_dynamics(t,y,rover,planet,experiment):
     return dydt
 
 def mechpower(v,rover):
-    '''Here at mech power, we calculate the instantaneous power using the motor torque and shaft rotation speed.'''
-    is_scalar_or_1d(v)
-    is_dict(rover)
-
+    '''v is 1D array or scalar/float/int and rover is a dict. The output is a 1D array or scalar/float/int'''
     
-    motor = rover["wheel_assembly"]["motor"]
-    mtr_w = motorW(v,rover)
-
-    p = tau_dcmotor(mtr_w,motor) * mtr_w
-    return p
+    if isinstance(v, (int, float)):
+        P = tau_dcmotor(motorW(v, rover), rover["wheel_assembly"]["motor"]) * motorW(v, rover)
+    
+    if isinstance(v, np.ndarray):
+        P = tau_dcmotor(motorW(v, rover), rover["wheel_assembly"]["motor"]) * motorW(v, rover)
+            
+    if not isinstance(v, (int, float, np.ndarray)):
+        raise ValueError("v must be a scalar or 1D array")
+    
+    if isinstance(rover, dict):
+        P = tau_dcmotor(motorW(v, rover), rover["wheel_assembly"]["motor"]) * motorW(v, rover)
+       
+    else:     
+        raise ValueError("rover must be a dictionary")
+    
+    #return power function should match the format of V inout (array,int, or float)
+    #beware of units 
+    return P  
 
 def battenergy(t,v,rover):
     is_1d(t)
