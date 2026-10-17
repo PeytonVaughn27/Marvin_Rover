@@ -1,4 +1,5 @@
 
+from itertools import count
 from math import erf
 from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
@@ -251,22 +252,12 @@ def rover_dynamics(t,y,rover,planet,experiment):
 
 def mechpower(v,rover):
     '''v is 1D array or scalar/float/int and rover is a dict. The output is a 1D array or scalar/float/int'''
-    
-    if isinstance(v, (int, float)):
-        P = tau_dcmotor(motorW(v, rover), rover["wheel_assembly"]["motor"]) * motorW(v, rover)
-    
-    if isinstance(v, np.ndarray):
-        P = tau_dcmotor(motorW(v, rover), rover["wheel_assembly"]["motor"]) * motorW(v, rover)
-            
-    if not isinstance(v, (int, float, np.ndarray)):
-        raise ValueError("v must be a scalar or 1D array")
-    
-    if isinstance(rover, dict):
-        P = tau_dcmotor(motorW(v, rover), rover["wheel_assembly"]["motor"]) * motorW(v, rover)
-       
-    else:     
-        raise ValueError("rover must be a dictionary")
-    
+    if (not isinstance(v, (int, float, np.ndarray))) or (not isinstance(rover, dict)):
+        raise ValueError("v must be a scalar or 1D array and rover must be a dictionary")
+
+    #elif isinstance(v, (int, float)) and isinstance(rover, dict):
+    P = tau_dcmotor(motorW(v, rover), rover["wheel_assembly"]["motor"]) * motorW(v, rover)
+
     #return power function should match the format of V inout (array,int, or float)
     #beware of units 
     return P  
@@ -274,19 +265,53 @@ def mechpower(v,rover):
 def battenergy(t,v,rover):
     '''t is 1D array and v is 1D array or scalar/float/int and rover is a dict. 
     The output is a 1D array or scalar/float/int of the energy consumed by the battery over time.'''
-    is_1d(t)
-    is_1d(v)
-    is_dict(rover)
-    is_eql_length(t,v)
+    
+    #check shit
+    if (not isinstance(v, (int, float, np.ndarray))) or (not isinstance(rover, dict)) or (not isinstance(t, np.ndarray)):
+        raise ValueError("v must be a scalar or 1D array and rover must be a dictionary")
 
+    if isinstance(v, (np.ndarray)) and len(t) != len(v):
+        raise ValueError("t and v must be the same length")
+
+    # get shit
     p= mechpower(v,rover) #vector or scalar 
     w = motorW(v,rover) # same as v
-    tau= tau_dcmotor(w,rover) # vector
+    tau= tau_dcmotor(w,rover["wheel_assembly"]["motor"]) # vector
     
-    E = 
-
-    return E
-
+    # E_motor = []
+    # for time in t:
+    #     if time < 0:
+    #         raise ValueError("Time cannot be negative.")
+    #     else:  
+    #         E_motor += np.trapz(p, time) #vector or scalar
+    
+    # calculate efficiency of the motor based on torque and efficiency curve
+    efficiency_tor = rover["wheel_assembly"]["motor"]["effcy_tau"] #vector
+    efficiency = rover["wheel_assembly"]["motor"]["effcy"] #vector
+    eta = np.interp(tau, efficiency_tor, efficiency)
+    
+    P_battery = p / (eta) #vector or scalar
+    
+    # 3. Scalar input check
+    if isinstance(v, (int, float)):
+        return P_battery * t
+    
+    #vector input
+    E_battery = 0.0
+    for i in range(len(t)-1):
+        E_battery += np.trapz(P_battery[i:i+2], t[i:i+2])
+     
+    # print(f"Energy consumed by the battery over time: {E_battery}")
+    # print(f"Power consumed by the battery over time: {P_battery}")
+    # print(f"Torque consumed by the motor over time: {tau}")
+    # print(f"Efficiency of the motor over time: {eta}")
+    # print(f"Mechanical power consumed by the motor over time: {p}")
+    # print(f"Angular velocity of the motor over time: {w}")
+    # print(f"Velocity of the rover over time: {v}")
+    # print(f"Time array: {t}")
+       
+    return E_battery
+S
 
 def end_of_mission_event(end_event):
     """
