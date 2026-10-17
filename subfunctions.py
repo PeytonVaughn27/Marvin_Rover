@@ -272,18 +272,21 @@ def mechpower(v,rover):
     return P  
 
 def battenergy(t,v,rover):
+    '''t is 1D array and v is 1D array or scalar/float/int and rover is a dict. 
+    The output is a 1D array or scalar/float/int of the energy consumed by the battery over time.'''
     is_1d(t)
     is_1d(v)
     is_dict(rover)
     is_eql_length(t,v)
 
-    p= mechpower(v,rover)
-    w = motorW(v,rover)
-    tau= tau_dcmotor(w,rover)
-
-    E =1
+    p= mechpower(v,rover) #vector or scalar 
+    w = motorW(v,rover) # same as v
+    tau= tau_dcmotor(w,rover) # vector
+    
+    E = 
 
     return E
+
 
 def end_of_mission_event(end_event):
     """
