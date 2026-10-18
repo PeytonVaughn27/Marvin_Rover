@@ -11,11 +11,13 @@ efficiency = rover["wheel_assembly"]["motor"]["effcy"] #vector
 #make efficiency torque function
 eta_fun = interp1d(efficiency_tor, efficiency, kind = 'cubic')
 
-x = np.linspace(0, 165, 200)
+tau_eval = np.linspace(np.min(efficiency_tor), np.max(efficiency_tor), 100)
+effcy_eval = eta_fun(tau_eval)
 
-plt.plot(efficiency_tor, efficiency, marker="o", linestyle="", label="Data")
-plt.plot(x, eta_fun(x), label="Cubic spline")
+plt.plot(efficiency_tor, efficiency, '* ', label="Data")
+plt.plot(tau_eval, effcy_eval, label="Cubic spline")
 plt.xlabel("Torque(Nm)")
 plt.ylabel("Efficiency")
+plt.title('Motor Efficiency vs. Torque')
 plt.legend()
 plt.show()
