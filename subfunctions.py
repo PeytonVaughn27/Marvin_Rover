@@ -9,6 +9,7 @@ from dictionary import rover, planet, end_event
 from define_experiment import experiment1
 
 def is_scalar_or_1d(var):
+    print(type(var))
     if (type(var) != float and type(var) != int) and var.ndim > 1:
         raise Exception("Input is not a 1D vector or scalar.")
     else:
@@ -21,7 +22,7 @@ def is_dict(var):
         pass
 
 def is_scalar(var):
-    if (type(var) != float and type(var) != int):
+    if (type(var) != float and type(var) != int) and type(var) != np.float64 and type(var) != np.int64:
         raise Exception("Input is not a scalar.")
     else:
         pass
@@ -360,17 +361,21 @@ def end_of_mission_event(end_event):
 
 def simulate_rover(rover, planet, experiment, end_event):
     '''Returns simulated rover telemetry data with input for rover, planet, experiment, and end_event dictionaries.'''
-    if rover is not dict or planet is not dict or experiment is not dict or end_event is not dict:
-        raise TypeError("Input is not a dict")
+    is_dict(rover)
+    is_dict(planet)
+    is_dict(experiment)
+    is_dict(end_event)
 
     f = lambda t,y: rover_dynamics(t,y,rover,planet,experiment)
 
     t_0 = experiment['time_range'][0]
     t_end = end_event['max_time']
+    mission_events = end_of_mission_event(end_event)
+    Dist_left = mission_events[0]
+    Time_left = mission_events[1]
+    Vel_thresh = mission_events[2]
 
-
-    sol = solve_ivp(f, (t_0,t_end), experiment['initial_conditions'], method = 'RK45', events = [end_of_mission_event(end_event)])
-
+    sol = solve_ivp(f, (t_0,t_end), experiment['initial_conditions'], method = 'RK45', events = [Dist_left, Time_left, Vel_thresh])
     rover_output = rover
     rover_output['Time'] = sol.t
     rover_output['completion_time']= sol.t_events
@@ -396,7 +401,9 @@ def simulate_rover(rover, planet, experiment, end_event):
 # print(F_net(0, 0, rover, planet, 0.01))
 # print(mechpower(0, rover))
 # print(battenergy(np.array([0,1]), np.array([0,0]), rover))
-# #print(simulate_rover(rover, planet, experiment1, end_event))
 # print(end_of_mission_event(end_event))
 # print(rover_dynamics(0, np.array([0,0]), rover, planet, experiment1()[0]))
 # print(motorW(0, rover))
+# experiment, end_event = experiment1()
+# rover_output = simulate_rover(rover, planet, experiment, end_event)
+# print(rover_output)
