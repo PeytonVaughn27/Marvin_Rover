@@ -5,8 +5,8 @@ from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 import numpy as np
 
-from dictionary import rover, planet, end_event
-from define_experiment import experiment1
+#from dictionary import rover, planet, end_event
+#from define_experiment import experiment1
 
 def is_scalar_or_1d(var):
     print(type(var))
