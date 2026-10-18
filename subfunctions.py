@@ -306,7 +306,7 @@ def battenergy(t,v,rover):
         return P_battery * t
     
     else:
-        E_battery = np.trapz(P_battery,t)
+        E_battery = np.trapezoid(P_battery,t)
         
     #vector input
     # E_battery = 0.0
