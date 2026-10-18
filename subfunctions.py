@@ -5,6 +5,9 @@ from scipy.interpolate import interp1d
 from scipy.integrate import solve_ivp
 import numpy as np
 
+from dictionary import rover, planet, end_event
+from define_experiment import experiment1
+
 def is_scalar_or_1d(var):
     if (type(var) != float and type(var) != int) and var.ndim > 1:
         raise Exception("Input is not a 1D vector or scalar.")
@@ -293,7 +296,7 @@ def battenergy(t,v,rover):
     # calculate efficiency of the motor based on torque and efficiency curve
     efficiency_tor = rover["wheel_assembly"]["motor"]["effcy_tau"] #vector
     efficiency = rover["wheel_assembly"]["motor"]["effcy"] #vector
-    eta_fun = interp1d(efficiency_tor, efficiency, kind = 'cubic')
+    eta_fun = interp1d(efficiency_tor, efficiency, kind = 'cubic',fill_value='extrapolate')
     
     P_battery = p / (eta_fun(tau)) #vector or scalar
     
@@ -381,3 +384,19 @@ def simulate_rover(rover, planet, experiment, end_event):
     rover_output['energy_per_distance']= rover_output['energy']/rover_output['distance_traveled']
     
     return rover_output
+
+
+
+# print(get_mass(rover))
+# print(get_gear_ratio(rover["wheel_assembly"]["speed_reducer"]))
+# print(tau_dcmotor(0, rover["wheel_assembly"]["motor"]))
+# print(F_drive(0, rover))
+# print(F_gravity(0, rover, planet))
+# print(F_rolling(0, 0, rover, planet, 0.01))
+# print(F_net(0, 0, rover, planet, 0.01))
+# print(mechpower(0, rover))
+# print(battenergy(np.array([0,1]), np.array([0,0]), rover))
+# #print(simulate_rover(rover, planet, experiment1, end_event))
+# print(end_of_mission_event(end_event))
+# print(rover_dynamics(0, np.array([0,0]), rover, planet, experiment1()[0]))
+# print(motorW(0, rover))
