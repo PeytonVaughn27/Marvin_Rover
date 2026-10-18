@@ -310,8 +310,7 @@ def battenergy(t,v,rover):
     # print(f"Velocity of the rover over time: {v}")
     # print(f"Time array: {t}")
        
-    return E_battery
-S
+    return 6 *E_battery
 
 def end_of_mission_event(end_event):
     """
