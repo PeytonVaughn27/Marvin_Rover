@@ -14,6 +14,7 @@ alpha_fun = interp1d(alpha_dist, alpha_deg, kind = 'cubic', fill_value='extrapol
 x = np.linspace(start=0, stop = 1000, num= 100)
 
 plt.plot(x, alpha_fun(x), marker="*",linestyle="-")
+plt.title("Angle of Inclination vs Distance")
 plt.xlabel("Distance(m)")
 plt.ylabel("Angle(Deg)")
 

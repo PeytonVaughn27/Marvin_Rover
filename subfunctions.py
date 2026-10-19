@@ -375,7 +375,7 @@ def simulate_rover(rover, planet, experiment, end_event):
     Time_left = mission_events[1]
     Vel_thresh = mission_events[2]
 
-    sol = solve_ivp(f, (t_0,t_end), experiment['initial_conditions'], method = 'RK45', events = [Dist_left, Time_left, Vel_thresh])
+    sol = solve_ivp(f, (t_0,t_end), experiment['initial_conditions'], method = 'BDF', events = [Dist_left, Time_left, Vel_thresh], max_step = 1)
     rover_output = rover
     rover_output['Time'] = sol.t
     rover_output['completion_time']= sol.t_events
