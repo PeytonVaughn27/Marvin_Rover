@@ -63,7 +63,7 @@ for d in diameters:
 
     edl_system['parachute']['diameter'] = d
     
-    t, Y, edl_system = simulate_edl(edl_system, mars, mission_events, tmax, False)
+    t, Y, edl_system = simulate_edl(edl_system, mars, mission_events, tmax, False, use_Cd_mod=0)
     
     t_term = return_time(t)
     alt_edl_term = Y[1, -1]
