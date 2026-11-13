@@ -162,7 +162,7 @@ def v2M_Mars(v, a):
     return M
 
 def CD_mod(mach, cd):
- # Converts cd, to cd mod, as a funtion of v[mach]    
+ # Converts cd, to cd mod, as a function of v[mach]    
  #below mach 0.25  MEF ~ 1, negligible
     if (mach<0.25):
         cd_Mod = cd
@@ -781,13 +781,15 @@ def update_edl_state(edl_system, TE, YE, Y, ITER_INFO):
 
     return edl_system, y0, TERMINATE_SIM
 
-def simulate_edl(edl_system, planet, mission_events, tmax, ITER_INFO):
+def simulate_edl(edl_system, planet, mission_events, tmax, ITER_INFO, use_Cd_mod = 0):
     # simulate_edl
     #
     # This simulates the EDL system. It requires a definition of the
     # edl_system, the planet, the mission events, a maximum simulation time and
     # has an optional flag to display detailed iteration information.
     
+    
+
     # handle to events function for edl simulation
     #h_edl_events = lambda t, y: edl_events(t, y, edl_system, mission_events)
     events = edl_events(edl_system, mission_events)
@@ -809,13 +811,15 @@ def simulate_edl(edl_system, planet, mission_events, tmax, ITER_INFO):
     if ITER_INFO:
         print('Commencing simulation run...\n')
     
-    
+    og_CD = edl_system['parachute']['Cd']
     # declare our variables (just empty arrays)
     T = np.array([])
     Y = np.array([[], [], [], [], [], [], []])
     TERMINATE_SIM = False
     while not(TERMINATE_SIM):
-        
+        if use_Cd_mod:
+            edl_system['parachute']['Cd'] = CD_mod(v2M_Mars(edl_system['velocity'],edl_system['altitude']),og_CD)
+          
         # run simulation until an event occurs 
         fun = lambda t, y: edl_dynamics(t, y, edl_system, planet)
         sol = solve_ivp(fun, tspan, y0, method='DOP853', events=events, max_step=0.1)
