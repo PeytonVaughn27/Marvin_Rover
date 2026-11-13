@@ -161,6 +161,43 @@ def v2M_Mars(v, a):
     
     return M
 
+def CD_mod(mach, cd):
+ # Converts cd, to cd mod, as a funtion of v[mach]    
+ #below mach 0.25  MEF ~ 1, negligible
+    if (mach<0.25):
+        cd_Mod = cd
+
+    # use a process similar to V2M to find MEF using the given table range
+    elif (mach>=0.25):
+        # This table defines MEF vs. Mach
+        MEF_data = np.array([[0.25, 1], 
+                            [0.5, 1], 
+                            [0.65, 1],
+                            [0.7, 0.97], 
+                            [0.8, 0.91], 
+                            [0.9, 0.72],
+                            [0.95, 0.66], 
+                            [1, 0.75], 
+                            [1.1, 0.9],
+                            [1.2, 0.96], 
+                            [1.3, 0.99], 
+                            [1.4, 0.999],
+                            [1.5, 0.992], 
+                            [1.6, 0.98], 
+                            [1.8, 0.91],
+                            [1.9, 0.85],
+                            [2.0, 0.82],
+                            [2.2, 0.75],
+                            [2.5, 0.64],
+                            [2.6, 0.62],])
+
+        mef_fit = pchip(MEF_data[:, 0], MEF_data[:, 1])
+        cd_Mod = abs(mef_fit(mach)*cd)
+
+    return cd_Mod    
+
+
+
 
 def thrust_controller(edl_system, planet):
     # thrust_controller
